@@ -1,20 +1,12 @@
 import os
 import time
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-
 
 class RomLoader(object):
-    rom_name = None
-    rom_number = None
     driver = None
 
-    def __init__(self, driver, rom_number=None, rom_name=None):
+    def __init__(self, driver):
         self.driver = driver
-        self.rom_number = rom_number
-        self.rom_name = rom_name
 
     def download_all_roms(self):
         roms = self.driver.find_elements_by_css_selector('#roms_table a')
@@ -46,18 +38,9 @@ class RomLoader(object):
     def __rom_is_esa_protected(self):
         try:
             self.driver.find_element_by_css_selector('#esa_notice')
-            print('true')
             return True
         except Exception as e:
             return False
-
-    def __find_rom_url(self):
-        roms = self.driver.find_elements_by_css_selector('#roms_table a')
-        if self.rom_number:
-            rom = roms[self.rom_number]
-            if rom.text:
-                rom_url = f'{rom.get_attribute("href")}'
-                self.driver.get(rom_url)
 
     def __download_from_link(self, download_number):
         downloads = self.driver.find_elements_by_css_selector('.download_list a')
